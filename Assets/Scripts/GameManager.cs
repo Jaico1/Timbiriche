@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int Width = 4;
-    public int Height = 4;
-    public Point PointPrefab; 
+    private GameState _gameState;
+
+
 
     public void Awake()
     {
@@ -16,25 +16,48 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        GenerateBoard();
+        _gameState = GameState.start;
     }
-   
-    public void GenerateBoard()
+
+    public void UpdateGameState (GameState gameState)
     {
-        for (int i = 0; i < Height; i++)
-        {
-            for (int j = 0; j < Width; j++)
-            {
-                var p = new Vector2(i, j);
-                Instantiate(PointPrefab, p, Quaternion.identity);
-            }
-        }
-        var center = new Vector2((float)Width / 2 - 0.5f, (float)Height / 2 - 0.5f);
-        Camera.main.transform.position = new Vector3(center.x, center.y, -20);
+        _gameState = gameState;
+    }
+
+    public void SwitchPlayer()
+    {
+        if (_gameState == GameState.player1)
+            _gameState = GameState.player2;
+        else
+            _gameState = GameState.player1;
 
     }
+
+    public GameState GetGameState => _gameState;
+    
     void Update()
     {
-        
+        switch (_gameState)
+        {
+            case GameState.start:
+                UpdateGameState(GameState.player1);
+                break;
+            case GameState.player1: 
+                break;
+            case GameState.player2: 
+                break;
+            case GameState.end: 
+                break;
+            default:
+                break;
+        }
+    }
+
+    public enum GameState
+    {
+        start,
+        player1,
+        player2,
+        end
     }
 }
