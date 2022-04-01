@@ -5,6 +5,7 @@ using UnityEngine;
 public class Line : MonoBehaviour
 {
     public GameObject Inner;
+    
     private void OnMouseDown()
     {
         Debug.Log("mouse down");
@@ -28,6 +29,7 @@ public class Line : MonoBehaviour
         if(BoardManager.Instance.foundSquare == false)
         {
             BoardManager.Instance.SetLine();
+            
         }
         
     }
