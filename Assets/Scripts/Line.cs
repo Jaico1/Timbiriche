@@ -19,10 +19,17 @@ public class Line : MonoBehaviour
             else
                 Inner.GetComponent<SpriteRenderer>().color = Color.red;
 
-            BoardManager.Instance.SetLine(this);
+            
+            //BoardManager.Instance.SetLine();
         }
-
+        
         BoardManager.Instance.checkLines();
         BoardManager.Instance.colorSquares();
+        if(BoardManager.Instance.foundSquare == false)
+        {
+            BoardManager.Instance.SetLine();
+        }
+        
     }
 }
+

@@ -1,16 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager Instance;
-    public int Width = 4;
-    public int Height = 4;
+    public int P1score;
+    public int P2score;
+    public Text P1scoretxt;
+    public Text P2scoretxt;
     public Point PointPrefab;
     public Line LinePrefab;
     public NameSquare NameSquarePrefab;
     public List<Line> Lines;
     public List<NameSquare> NameSquares;
+    public bool foundSquare;
+    
     
 
     public void Awake()
@@ -20,10 +26,10 @@ public class BoardManager : MonoBehaviour
 
     void Start()
     {
-        GenerateBoard();
+        GenerateBoard(PlayerPrefs.GetInt("Size"), PlayerPrefs.GetInt("Size"));
     }
 
-    public void GenerateBoard()
+    public void GenerateBoard(int Height, int Width)
     {
         
         for (int i = 0; i < Height; i++)
@@ -31,9 +37,9 @@ public class BoardManager : MonoBehaviour
             for (int j = 0; j < Width; j++)
             {
                 var p = new Vector2(i, j);
-                var lv = new Vector2(i, (float)j-0.5f);//posicion de lineas verticales
-                var lh = new Vector2((float)i+0.5f, j);// posicion de lines horizontales
-                var s = new Vector2((float)i + 0.5f, (float)j+0.5f);// posicion de lines horizontales
+                var lv = new Vector2(i, (float)j-0.5f); //posicion de lineas verticales
+                var lh = new Vector2((float)i+0.5f, j); // posicion de lines horizontales
+                var s = new Vector2((float)i + 0.5f, (float)j+0.5f); // posicion de lines horizontales
                 Instantiate(PointPrefab, p, Quaternion.identity);
                 
                 if (i != Height-1)
@@ -88,29 +94,56 @@ public class BoardManager : MonoBehaviour
     
     public void colorSquares()
     {
+        this.foundSquare = false;
         foreach (NameSquare s in NameSquares)
         {
             if (s.checkedLines == 4 && s.isChecked == false)
             {
                 if (GameManager.Instance.GetGameState == GameManager.GameState.player1)
                 {
-                    s.Inner.GetComponent<SpriteRenderer>().color = Color.red;
+                    P1score++;
+                    P1scoretxt.text = "Player 1: " + P1score;
+                    s.Inner.GetComponent<SpriteRenderer>().color = Color.blue;
                     s.isChecked = true;
-                    GameManager.Instance.UpdateGameState(GameManager.GameState.player2);
+                    checkScore();
+                    //GameManager.Instance.UpdateGameState(GameManager.GameState.player2);
                 }
                 else
                 {
-                    s.Inner.GetComponent<SpriteRenderer>().color = Color.blue;
+                    P2score++;
+                    P2scoretxt.text = "Player 2: " + P2score;
+                    s.Inner.GetComponent<SpriteRenderer>().color = Color.red;
                     s.isChecked = true;
-                    GameManager.Instance.UpdateGameState(GameManager.GameState.player1);
+                    checkScore();
+                    //GameManager.Instance.UpdateGameState(GameManager.GameState.player1);
                 }
-                    
-                
+                this.foundSquare = true;
+                //SetLine();
             }
+
+        }
+    }
+
+    public void checkScore()
+    {
+        if (P1score > (NameSquares.Count/2))
+        {
+            Debug.Log("player1 wins");
+            SceneManager.LoadScene("P1wins");
+        }
+        if (P2score > (NameSquares.Count / 2))
+        {
+            Debug.Log("player2 wins");
+            SceneManager.LoadScene("P2wins");
+        }
+        if (P2score == (NameSquares.Count / 2) && P1score == (NameSquares.Count / 2))
+        {
+            Debug.Log("its a draw");
+            SceneManager.LoadScene("Draw");
         }
     }
     
-    public void SetLine(Line l)
+    public void SetLine()
     {
         GameManager.Instance.SwitchPlayer();
     }

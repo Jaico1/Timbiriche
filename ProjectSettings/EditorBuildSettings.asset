@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MenuScreen.unity
     guid: f340ef2a392b5454f9d861be8cdce1fb
+  - enabled: 1
+    path: Assets/Scenes/P1wins.unity
+    guid: e7c7296ae4df0cb419a3e2c48bf34bcb
+  - enabled: 1
+    path: Assets/Scenes/P2wins.unity
+    guid: 7023c00c5ecb03a479e9bc8dc9322e5c
+  - enabled: 1
+    path: Assets/Scenes/Draw.unity
+    guid: 32e18f6492d7f834098c60bfb81b34cf
   m_configObjects: {}
